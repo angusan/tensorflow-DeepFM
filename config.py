@@ -1,9 +1,9 @@
 
 # set the path-to-files
-TRAIN_FILE = "./example/data/train.csv"
-TEST_FILE = "./example/data/test.csv"
+TRAIN_FILE = "./tfDeepFM/example/data/train.csv"
+TEST_FILE = "./tfDeepFM/example/data/test.csv"
 
-SUB_DIR = "./example/output"
+SUB_DIR = "./tfDeepFM/example/output"
 
 
 NUM_SPLITS = 3
