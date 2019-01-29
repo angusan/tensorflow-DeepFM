@@ -149,7 +149,7 @@ class DeepFM(BaseEstimator, TransformerMixin):
                 self.optimizer = tf.train.MomentumOptimizer(learning_rate=self.learning_rate, momentum=0.95).minimize(
                     self.loss)
             elif self.optimizer_type == "yellowfin":
-                #self.optimizer = YFOptimizer(learning_rate=self.learning_rate, momentum=0.0).minimize(self.loss)
+                self.optimizer = YFOptimizer(learning_rate=self.learning_rate, momentum=0.0).minimize(self.loss)
 
             # init
             self.saver = tf.train.Saver()
