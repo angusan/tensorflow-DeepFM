@@ -108,3 +108,6 @@ example/__pycache__/
 example/data/*.csv
 example/output/*.csv
 yellowfin.py
+
+# PyCharm stuff:
+.idea/
