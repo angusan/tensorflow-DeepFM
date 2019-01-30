@@ -2,7 +2,7 @@
 TRAIN_FILE = "./example/data/elo_df_train_sm.csv"
 TEST_FILE = "./example/data/elo_df_test_sm.csv"
 
-SUB_DIR = "./tfDeepFM/example/output"
+SUB_DIR = "./example/output"
 
 NUM_SPLITS = 20
 RANDOM_SEED = 2017
