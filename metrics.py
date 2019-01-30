@@ -1,5 +1,6 @@
 
 import numpy as np
+from sklearn.metrics import mean_squared_error
 
 def gini(actual, pred):
     assert (len(actual) == len(pred))
@@ -13,3 +14,6 @@ def gini(actual, pred):
 
 def gini_norm(actual, pred):
     return gini(actual, pred) / gini(actual, actual)
+
+def rmse(actual, pred):
+    return np.sqrt(mean_squared_error(actual, pred))

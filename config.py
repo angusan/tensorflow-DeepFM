@@ -6,7 +6,7 @@ TEST_FILE = "elo_df_test.csv"
 SUB_DIR = "./tfDeepFM/example/output"
 
 
-NUM_SPLITS = 3
+NUM_SPLITS = 20
 RANDOM_SEED = 2017
 
 # types of columns of the dataset dataframe
