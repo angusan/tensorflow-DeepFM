@@ -170,7 +170,7 @@ class DeepFM(BaseEstimator, TransformerMixin):
 
 
     def _init_session(self):
-        config = tf.ConfigProto(device_count={"gpu": 0})
+        config = tf.ConfigProto(device_count={"CPU": 0})
         config.gpu_options.allow_growth = True
         return tf.Session(config=config)
 
