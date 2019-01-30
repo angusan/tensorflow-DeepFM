@@ -11,27 +11,20 @@ from sklearn.model_selection import StratifiedKFold
 
 import config
 from metrics import gini_norm
+from metrics import rmse
 from DataReader import FeatureDictionary, DataParser
 from DeepFM import DeepFM
 
-gini_scorer = make_scorer(gini_norm, greater_is_better=True, needs_proba=True)
+#gini_scorer = make_scorer(gini_norm, greater_is_better=True, needs_proba=True)
 
 def _load_data():
-
     dfTrain = pd.read_csv(config.TRAIN_FILE)
     dfTest = pd.read_csv(config.TEST_FILE)
 
-    def preprocess(df):
-        cols = [c for c in df.columns if c not in ["card_id", "target"]]
-        #df["missing_feat"] = np.sum((df[cols] == -1).values, axis=1)
-        #df["ps_car_13_x_ps_reg_03"] = df["ps_car_13"] * df["ps_reg_03"]
-        return df
+    dfTrain = dfTrain.fillna(0)
+    dfTest = dfTest.fillna(0)
 
-    dfTrain = preprocess(dfTrain)
-    dfTest = preprocess(dfTest)
-
-    cols = [c for c in dfTrain.columns if c not in ["card_id", "target"]]
-    cols = [c for c in cols if (not c in config.IGNORE_COLS)]
+    cols = [c for c in dfTrain.columns if c not in config.IGNORE_COLS]
 
     X_train = dfTrain[cols].values
     y_train = dfTrain["target"].values
@@ -69,7 +62,7 @@ def _run_base_model_dfm(dfTrain, dfTest, folds, dfm_params):
         y_train_meta[valid_idx,0] = dfm.predict(Xi_valid_, Xv_valid_)
         y_test_meta[:,0] += dfm.predict(Xi_test, Xv_test)
 
-        gini_results_cv[i] = gini_norm(y_valid_, y_train_meta[valid_idx])
+        gini_results_cv[i] = rmse(y_valid_, y_train_meta[valid_idx])
         gini_results_epoch_train[i] = dfm.train_result
         gini_results_epoch_valid[i] = dfm.valid_result
 
@@ -119,7 +112,7 @@ dfTrain, dfTest, X_train, y_train, X_test, ids_test, cat_features_indices = _loa
 
 # folds
 folds = list(StratifiedKFold(n_splits=config.NUM_SPLITS, shuffle=True,
-                             random_state=config.RANDOM_SEED).split(X_train, y_train))
+                             random_state=config.RANDOM_SEED).split(X_train, dfTrain.outliers))
 
 
 # ------------------ DeepFM Model ------------------
@@ -140,7 +133,8 @@ dfm_params = {
     "batch_norm_decay": 0.995,
     "l2_reg": 0.01,
     "verbose": True,
-    "eval_metric": gini_norm,
+    "eval_metric": rmse,
+    "loss_type": 'mse',
     "random_seed": config.RANDOM_SEED
 }
 y_train_dfm, y_test_dfm = _run_base_model_dfm(dfTrain, dfTest, folds, dfm_params)
