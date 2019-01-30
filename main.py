@@ -16,28 +16,27 @@ from DeepFM import DeepFM
 
 gini_scorer = make_scorer(gini_norm, greater_is_better=True, needs_proba=True)
 
-
 def _load_data():
 
     dfTrain = pd.read_csv(config.TRAIN_FILE)
     dfTest = pd.read_csv(config.TEST_FILE)
 
     def preprocess(df):
-        cols = [c for c in df.columns if c not in ["id", "target"]]
-        df["missing_feat"] = np.sum((df[cols] == -1).values, axis=1)
-        df["ps_car_13_x_ps_reg_03"] = df["ps_car_13"] * df["ps_reg_03"]
+        cols = [c for c in df.columns if c not in ["card_id", "target"]]
+        #df["missing_feat"] = np.sum((df[cols] == -1).values, axis=1)
+        #df["ps_car_13_x_ps_reg_03"] = df["ps_car_13"] * df["ps_reg_03"]
         return df
 
     dfTrain = preprocess(dfTrain)
     dfTest = preprocess(dfTest)
 
-    cols = [c for c in dfTrain.columns if c not in ["id", "target"]]
+    cols = [c for c in dfTrain.columns if c not in ["card_id", "target"]]
     cols = [c for c in cols if (not c in config.IGNORE_COLS)]
 
     X_train = dfTrain[cols].values
     y_train = dfTrain["target"].values
     X_test = dfTest[cols].values
-    ids_test = dfTest["id"].values
+    ids_test = dfTest["card_id"].values
     cat_features_indices = [i for i,c in enumerate(cols) if c in config.CATEGORICAL_COLS]
 
     return dfTrain, dfTest, X_train, y_train, X_test, ids_test, cat_features_indices
@@ -93,7 +92,7 @@ def _run_base_model_dfm(dfTrain, dfTest, folds, dfm_params):
 
 
 def _make_submission(ids, y_pred, filename="submission.csv"):
-    pd.DataFrame({"id": ids, "target": y_pred.flatten()}).to_csv(
+    pd.DataFrame({"card_id": ids, "target": y_pred.flatten()}).to_csv(
         os.path.join(config.SUB_DIR, filename), index=False, float_format="%.5f")
 
 

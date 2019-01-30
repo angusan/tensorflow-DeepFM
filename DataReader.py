@@ -59,10 +59,10 @@ class DataParser(object):
             dfi = pd.read_csv(infile)
         if has_label:
             y = dfi["target"].values.tolist()
-            dfi.drop(["id", "target"], axis=1, inplace=True)
+            dfi.drop(["card_id", "target"], axis=1, inplace=True)
         else:
-            ids = dfi["id"].values.tolist()
-            dfi.drop(["id"], axis=1, inplace=True)
+            ids = dfi["card_id"].values.tolist()
+            dfi.drop(["card_id"], axis=1, inplace=True)
         # dfi for feature index
         # dfv for feature value which can be either binary (1/0) or float (e.g., 10.24)
         dfv = dfi.copy()
